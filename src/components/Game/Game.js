@@ -5,6 +5,7 @@ import { WORDS } from '../../data';
 import GuessInput from '../GuessInput/GuessInput';
 import GuessResult from '../GuessResult/GuessResult';
 import { NUM_OF_GUESSES_ALLOWED } from '../../constants';
+import Banner from '../Banner/Banner';
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -14,6 +15,8 @@ console.info({ answer });
 function Game() {
   const [guess, setGuess] = React.useState('');
   const [list, setList] = React.useState([]);
+  const [status, setStatus] = React.useState('');
+  const [disable, setDisable] = React.useState(false);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -23,11 +26,14 @@ function Game() {
     };
     const nextList = [...list, newGuess];
     setGuess('');
-    if (nextList.length > 6) {
-      window.alert(`Maximum guesses are ${NUM_OF_GUESSES_ALLOWED}`);
-      return;
-    }
     setList(nextList);
+    if (newGuess.guess === answer) {
+      setStatus('win');
+    }
+    if (newGuess.guess !== answer && nextList.length === 6) {
+      setStatus('lose');
+      setDisable(true);
+    }
   }
 
   return (
@@ -37,7 +43,9 @@ function Game() {
         input={guess}
         setInput={setGuess}
         handleSubmit={handleSubmit}
+        disable={disable}
       />
+      <Banner status={status} numOfGuess={list.length} answer={answer} />
     </>
   );
 }
