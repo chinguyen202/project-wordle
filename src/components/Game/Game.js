@@ -32,7 +32,7 @@ function Game() {
 
   return (
     <>
-      <GuessResult results={list} />
+      <GuessResult results={list} answer={answer} />
       <GuessInput
         input={guess}
         setInput={setGuess}
